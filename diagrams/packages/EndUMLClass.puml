@@ -1,0 +1,82 @@
+@startuml
+
+package Vista {
+
+  class EndView {
+    - primaryStage: Stage
+    + EndView(primaryStage: Stage)
+    - mostrar(): void
+    + mostrarDerrota(playerScore: int, name: String): void
+    + mostrarVictoria(name: String): void
+    + getBotonReiniciar(): Button
+  }
+  
+  class BotonBase {
+    + BotonBase(text : String)
+    + aplicarEstilo() : void
+  }
+  
+  class LabelEnd {
+    + LabelEnd(texto : String) 
+  }
+
+}
+
+package Controlador {
+  
+  class EndGameController {
+    - endView: EndView
+    - gameController: GameController
+    + EndGameController(endView: EndView, gameController: GameController, player: Player)
+    - configurarEventos(): void
+    + mostrarLoose(playerScore: int): void
+    + mostrarWin(): void
+  }
+  
+}
+
+package Modelo {
+  
+    class Player {
+    - name : String
+    - jokers : List<JokerApply>
+    - tarots : List<TarotApply>
+    - mainHand : MainHand
+    - playingHand : PlayingHand
+    - nTarots : int
+    - nJokers : int
+    + Player(deck : Deck_I, name : String)
+    + getMainCards() : List<Card>
+    + selectCardToHand(card : Card) : void
+    + playHand(round : Round) : void
+    + acceptMoreCards() : boolean
+    + discardHand(round : Round) : void
+    + discard() : void
+    + getPlayingHand() : PlayingHand
+    + numberOfCards() : int
+    + reciveCards(cards : List<Card>) : void
+    + removeCards() : void
+    + useTarot(selectedTarot : Tarot) : void
+    + addTarot(tarot : Tarot) : void
+    + addJoker(joker : JokerApply) : void
+    + removeJoker(joker : JokerApply) : void
+    + checkUsedCards(card : Card) : boolean
+    + unselectCardToHand(card : Card) : void
+    + getHand() : String
+    + removeTarot(tarot : Tarot) : void
+    + getTarots() : List<Tarot>
+    + getJokers() : List<JokerApply>
+    + getHandSize() : int
+    + getName() : String
+  }
+
+}
+
+EndView "1" --> "1" BotonBase
+EndView "1" --> "1" LabelEnd
+
+EndGameController "1" --> "1" EndView
+EndGameController .> BotonBase
+EndGameController "1" --> "1" Player
+
+@enduml

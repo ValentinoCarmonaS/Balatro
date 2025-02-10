@@ -1,0 +1,38 @@
+@startuml
+
+package Vista {
+
+  class InicioView {
+      - primaryStage : Stage
+      - nombreField : TextField
+
+      + InicioView(primaryStage: Stage)
+      + mostrar(): void
+      + getIniciarJuegoButton(): Button
+      + getNombreIngresado(): String
+  }
+
+  class BotonBase {
+  + aplicarEstilo() : void
+  }
+
+}
+
+package Controlador {
+
+  class InicioController {
+    - gameController : GameController
+
+    + InicioController(inicioView: InicioView, gameController: GameController)
+    - configurarEventos(): void
+    - iniciarJuego(): void
+    + mostrarPantallaInicio(): void
+  }
+
+}
+
+InicioView "1" --> "1" BotonBase
+InicioController "1" --> "1" InicioView
+InicioController ..> BotonBase
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+
+interface TarotApply {
+    + apply(score : Score) : void
+    + use() : void
+    + getName() : String
+    + getDescription() : String
+    + getTargetType() : Tarotable
+}
+
+interface JokerApply {
+    + apply(Score score) : void
+    + getNombre() : String
+    + getDescripcion() : String
+}
+
+class Store {
+    - List<Card> cards
+
+    + Store(jokerList: List<JokerApply>, tarots: List<TarotApply>, cards: List<Card>)
+    + buyJoker(index: int) : JokerApply
+    + buyTarot(index: int) : TarotApply
+    + buyCard(index: int) : Card
+    + getTarots() : List<TarotApply>
+    + getJokerList() : List<JokerApply>
+    + getCards() : List<Card>
+}
+
+Store "1" --> "0..*" JokerApply
+Store "1" --> "0..*" TarotApply
+
+@enduml

@@ -1,0 +1,92 @@
+@startuml
+
+interface Tarotable {
+    + applyTarot(tarot : Tarot) : void
+}
+
+class FactoryCard {
+    + createBaseDeck() : List<Card>
+    + createEmptyDeck() : List<Card>
+    + returnSuits() : List<Suit>
+}
+
+enum Suit {
+    + CLUBS
+    + HEARTS
+    + SPADES
+    + DIAMONDS
+    + equalsSuit(Suit suit) : boolean
+    + fromString(String suitStr) : Suit
+    + getSuitName() : String
+}
+
+enum Rank {
+    + TWO
+    + THREE
+    + FOUR
+    + FIVE
+    + SIX
+    + SEVEN
+    + EIGHT
+    + NINE
+    + TEN
+    + JACK
+    + QUEEN
+    + KING
+    + ACE
+    - value : int
+    + Rank(value : int)
+    + fromString(rankStr : String) : Rank
+    + equalRank(rank : Rank) : boolean
+    + getValue() : int
+    + getOrdinal() : int
+    + continuouns(rank : Rank) : boolean
+    + equalsTen() : boolean
+    + equalsAs() : boolean
+    + isHigherThan(rank : Rank) : boolean
+    + isLowerThan(rank : Rank) : boolean
+    + getRankName() : String
+}
+
+class Score {
+    - points : int
+    - mult : int
+    - addMult : int
+    + Score(value : int, mult : int, addMult : int)
+    + getTotalPoints() : int
+    + applyScore(incomingScore : Score) : void
+    + replacePoints(points : int) : void
+    + replaceAddMult(addMult : int) : void
+    + replaceMult(mult : int) : void
+    + increasePoints(points : int) : void
+    + increaseMult(mult : int) : void
+    + multiplyMult(mult : int) : void
+    + applyJoker(joker : Joker) : void
+}
+
+class Card implements Tarotable {
+    + Card(point : Score, suit : Suit, rank : Rank)
+    + continuounsRank(card : Card) : boolean
+    + equalsSuit(card : Card) : boolean
+    + equalRank(incomingCard : Card) : boolean
+    + applyScore(incommingScore : Score) : void
+    + getPoints() : Score
+    + applyTarot(tarot : Tarot) : void
+    + isTen() : boolean
+    + isAs() : boolean
+    + isHigherThan(card : Card) : boolean
+    + getRank() : int
+    + getRankName() : String
+    + getSuit() : String
+}
+
+
+FactoryCard "1" --> "0..*" Suit
+FactoryCard  ..>  Rank
+FactoryCard ..> Card 
+
+Card "1" --> "1" Score
+Card "1" --> "1" Suit
+Card "1" --> "1" Rank
+
+@enduml

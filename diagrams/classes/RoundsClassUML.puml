@@ -1,0 +1,45 @@
+@startuml
+
+class Rounds {
+    - index : int
+    + Rounds(rounds : List<Round>)
+    + getRound(indexRound : int) : Round
+    + useJoker(discardJokerStrategy : DiscardJokerStrategy) : void
+    + nextRound() : void
+    + getSize() : int
+}
+
+class Round {
+    - hands : int
+    - discardsLeft : int
+    - discardsUsed : int
+    - playerScore : int
+    - targetScore : int
+    + Round(hands : int, discards : int, targetScore : int)
+    + reduceHands() : void
+    + reduceDiscards() : boolean
+    + playerDiscard(player : Player) : void
+    + addPlayerScore(playerScore : Score) : void
+    + verifyEndGame() : boolean
+    + verifyStatePlayer() : boolean
+    + useJoker(joker : DiscardJokerStrategy) : void
+    + getHandsLeft() : int
+    + getDiscardsLeft() : int
+    + getPlayerScore() : int
+    + getTargetScore() : int
+}
+
+class DiscardJokerStrategy {
+    - score : Score
+    + DiscardJokerStrategy(strategy : ScoringStrategy, rounds : Rounds)
+    + apply(score : Score) : void
+    + use() : void
+}
+
+
+
+Rounds "1" --> "0..*" Round
+Round ..> DiscardJokerStrategy
+DiscardJokerStrategy "1" --> "1" Rounds
+
+@enduml

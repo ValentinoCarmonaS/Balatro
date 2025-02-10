@@ -1,0 +1,79 @@
+@startuml
+
+interface ScoringStrategy {
+  + apply(Score score) : void
+}
+
+interface JokerStrategy {
+  + apply(score : Score) : void
+}
+
+interface Jokeable {
+    + equalHand(hand : Hand) : bool
+}
+
+interface Hand {
+    + isValid(cards : List<Card>) : boolean
+    + getTotalPoints() : int
+    + incRelevantValues() : Score
+    + getRelevatCards() : List<Card>
+    + equalHand(hand : Hand) : boolean
+    + handToString() : String
+}
+
+class HandJokerStrategy implements JokerStrategy{
+    + HandJokerStrategy(strategy : ScoringStrategy, playingHand : Jokeable, hand : Hand)
+}
+
+class ScoreJokerStrategy implements JokerStrategy{
+    + ScoreJokerStrategy(strategy : ScoringStrategy)
+}
+
+class DiscardJokerStrategy implements JokerStrategy{
+    + DiscardJokerStrategy(strategy : ScoringStrategy, rounds : Rounds)
+    + apply(score : Score) : void
+    + use() : void
+}
+
+class MultiJokerStrategy implements JokerStrategy {
+    - jokers : List<Joker>
+    + MultiJokerStrategy(jokers : List<JokerApply>)
+}
+
+class Score {
+    - points : int
+    - mult : float
+    - addMult : int
+
+    + Score(value : int, mult : int, addMult : int)
+    + getTotalPoints() : int
+    + applyScore(incomingScore : Score) : void
+    + replacePoints(points : int) : void
+    + replaceMult(mult : float) : void
+    + replaceAddMult(addMult : int) : void
+    + increasePoints(points : int) : void
+    + increaseMult(mult : float) : void
+    + multiplyMult(mult : float) : void
+}
+
+class Rounds {
+    - rounds : List<Round>
+    - index : int
+    + Rounds(rounds : List<Round>)
+    + getRound(indexRound : int) : Round
+    + useJoker(discardJokerStrategy : DiscardJokerStrategy) : void
+    + nextRound() : void
+    + getSize() : int
+}
+
+HandJokerStrategy "1" --> "1" ScoringStrategy
+ScoreJokerStrategy "1" --> "1" ScoringStrategy
+DiscardJokerStrategy "1" --> "1" ScoringStrategy
+
+HandJokerStrategy "1" --> "1" Jokeable
+HandJokerStrategy "1" --> "1" Hand
+
+DiscardJokerStrategy "1" --> "1" Rounds
+DiscardJokerStrategy "1" --> "1" Score
+
+@enduml

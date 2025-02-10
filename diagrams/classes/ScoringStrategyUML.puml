@@ -1,0 +1,60 @@
+@startuml
+
+interface ScoringStrategy {
+  + apply(Score score) : void
+}
+
+class ReplaceMultStrategy implements ScoringStrategy {
+  - mult : float
+  + ReplaceMultStrategy(mult : float)
+}
+
+class ReplaceAddMultStrategy implements ScoringStrategy {
+  - addMult : int
+  + ReplaceAddMultStrategy(addMult : int)
+}
+
+class ReplacePointStrategy implements ScoringStrategy {
+  - point : int
+  + ReplacePointStrategy(point : int)
+}
+
+class IncreasePointsStrategy implements ScoringStrategy {
+  - points : int
+  + IncreasePointsStrategy(points : int)
+}
+
+class IncreaseMultStrategy implements ScoringStrategy {
+  - mult : float
+  + IncreaseMultStrategy(mult : float)
+}
+
+class MultiplyMultStrategy implements ScoringStrategy {
+  - mult : float
+  + IncreaseMultStrategy(mult : float)
+}
+
+class Score {
+    - points : int
+    - mult : float
+    - addMult : int
+
+    + Score(value : int, mult : int, addMult : int)
+    + getTotalPoints() : int
+    + applyScore(incomingScore : Score) : void
+    + replacePoints(points : int) : void
+    + replaceMult(mult : float) : void
+    + replaceAddMult(addMult : int) : void
+    + increasePoints(points : int) : void
+    + increaseMult(mult : float) : void
+    + multiplyMult(mult : float) : void
+}
+
+IncreaseMultStrategy ..> Score
+IncreasePointsStrategy ..> Score
+MultiplyMultStrategy ..> Score
+ReplacePointStrategy ..> Score
+ReplaceAddMultStrategy ..> Score
+ReplaceMultStrategy ..> Score
+
+@enduml

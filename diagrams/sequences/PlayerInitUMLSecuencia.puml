@@ -1,0 +1,47 @@
+@startuml
+
+actor Testcase
+
+create "p: Player" as p
+Testcase -> p: new Player(d)
+
+create "ph :PlayingHand" as ph
+p -> ph: new PlayingHand()
+
+create "hch :HandCheck" as hch
+ph -> hch: new HandCheck()
+
+loop Para cada hand
+  create "rs :RoyalStraight" as rs
+  hch -> rs: new RoyalStraight()
+  create "s :Score" as s
+  rs -> s: new Score(point, 1, 0)
+end loop
+
+create "mh :MainHand" as mh 
+p -> mh: new MainHand(d)
+
+Testcase -> d: dealCards(8)
+d --> Testcase : List<Card>
+Testcase -> p: reciveCards(List<Card>)
+p -> mh: reciveCards(List<Card>)
+
+loop int i = 0; i < 5; i++
+  Testcase -> p: selectCardToHand(i)
+  p -> mh: getCard(i)
+  mh --> p: c : Card
+  p -> ph: addCard(c)
+  ph -> hch: getHand(List<Card>)
+  
+  loop Para cada hand
+    alt Si es la Hand correspondiente
+      hch -> rs: isValid(List<Card>)
+      rs --> hch: true
+    end alt
+  end loop
+  
+  hch --> ph: rs
+  
+end loop
+
+@enduml

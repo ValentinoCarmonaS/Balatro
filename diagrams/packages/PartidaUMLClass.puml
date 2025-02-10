@@ -1,0 +1,146 @@
+@startuml
+
+package Vista {
+
+class CardsView {
+    - primaryStage : Stage
+    - layout : GridPane
+    - roundIndex : int
+    - playerCardsContainer : HBox
+    - playerJokerContainer : HBox
+    - playerTarotContainer : HBox
+    - roundContainer : HBox
+    - buttonsContainer : HBox
+
+    + CardsView(primaryStage : Stage, roundIndex : int)
+    - initRound() : void
+    + crearInformacionRonda(targetScore : int, playerScore : int, handsLeft : int, discardsLeft : int) : void
+    + actualizarLabelManoJugada(hand : String) : void
+    + showErrorOnScreen(message : String) : void
+    + setPlayerCards(cards : List<Button>) : void
+    + setPlayerJokers(jokers : List<Label>) : void
+    + setPlayerTarots(tarots : List<Label>) : void
+    + setPlayHandButton(playHandButton : Button) : void
+    + setDiscardHandButton(discardHandButton : Button) : void
+    + mostrar() : void
+  }
+  
+  class LabelBase {
+    + LabelBase(text : String)
+    - aplicarEstilo() : void 
+  }
+  
+  class LabelException {
+  + LabelException(texto : String)
+  }
+
+  class GenericLabel {
+      - name: String
+      - description: String
+      + GenericLabel(name: String, description: String)
+      + aplicarEstilo(): void
+      + changeName(): void
+      + changeDescription(): void
+  }
+
+  class ButtonCard {
+      + ButtonCard(text: String)
+      - aplicarEstilo(): void
+  }
+
+}
+
+package Controlador {
+
+  class CardsController {
+    - player : Player
+    - round : Round
+    - gameController : GameController
+
+    + CardsController(showCardsView : CardsView, player : Player, round : Round, gameController : GameController)
+    - configurarVista() : void
+    - createLabelJokers() : List<Label>
+    - createLabelTarots() : List<Label>
+    - createLabelCards() : List<Button>
+    - createPlayHandButton() : Button
+    - createDiscardHandButton() : Button
+    - setTarotAction(labelTarot : GenericLabel, tarot : TarotApply) : void
+    - onPlayHandClicked() : void
+    - onDiscardHandClicked() : void
+    - fadeOut(labelJoker : GenericLabel) : void
+    - fadeIn(label : GenericLabel) : void
+    - manejarSeleccionCarta(cardButton : Button, selectedCard : Card) : void
+    - manejarSeleccionTarot(selectedTarot : TarotApply) : void
+    - onCardClicked(card : Card, button : Button) : void
+    - chequearFinRonda() : void
+    + mostrarPantallaRonda() : void
+  }
+
+}
+
+package Modelo {
+
+    class Player {
+    - name : String
+    - jokers : List<JokerApply>
+    - tarots : List<TarotApply>
+    - mainHand : MainHand
+    - playingHand : PlayingHand
+    - nTarots : int
+    - nJokers : int
+    + Player(deck : Deck_I, name : String)
+    + getMainCards() : List<Card>
+    + selectCardToHand(card : Card) : void
+    + playHand(round : Round) : void
+    + acceptMoreCards() : boolean
+    + discardHand(round : Round) : void
+    + discard() : void
+    + getPlayingHand() : PlayingHand
+    + numberOfCards() : int
+    + reciveCards(cards : List<Card>) : void
+    + removeCards() : void
+    + useTarot(selectedTarot : Tarot) : void
+    + addTarot(tarot : Tarot) : void
+    + addJoker(joker : JokerApply) : void
+    + removeJoker(joker : JokerApply) : void
+    + checkUsedCards(card : Card) : boolean
+    + unselectCardToHand(card : Card) : void
+    + getHand() : String
+    + removeTarot(tarot : Tarot) : void
+    + getTarots() : List<Tarot>
+    + getJokers() : List<JokerApply>
+    + getHandSize() : int
+    + getName() : String
+  }
+
+  class Round {
+    - hands : int
+    - discardsLeft : int
+    - discardsUsed : int
+    - playerScore : int
+    - targetScore : int
+    + Round(hands : int, discards : int, targetScore : int)
+    + reduceHands() : void
+    + reduceDiscards() : boolean
+    + playerDiscard(player : Player) : void
+    + addPlayerScore(playerScore : Score) : void
+    + verifyEndGame() : boolean
+    + verifyStatePlayer() : boolean
+    + useJoker(joker : DiscardJokerStrategy) : void
+    + getHandsLeft() : int
+    + getDiscardsLeft() : int
+    + getPlayerScore() : int
+    + getTargetScore() : int
+  }
+
+}
+
+CardsView "1" -> "1" LabelBase
+CardsView ..> LabelException
+CardsController "1" --> "1" CardsView
+CardsController .> GenericLabel
+CardsController .> ButtonCard
+CardsController "1" -> "1" Round
+CardsController "1" -> "1" Player
+
+@enduml

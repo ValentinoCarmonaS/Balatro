@@ -1,0 +1,157 @@
+@startuml
+
+package Vista {
+  class TiendaView {
+    - primaryStage : Stage
+    - roundIndex : int
+    - tarotButtonsContainer : HBox
+    - jokerButtonsContainer : HBox
+    - cartaContainer : HBox
+
+    + TiendaView(primaryStage: Stage, roundIndex: int)
+    + mostrar(): void
+    + setTarotButtons(buttons: List<Button>): void
+    + setJokerButtons(buttons: List<Button>): void
+    + setCardButtons(buttons: List<Button>): void
+    + getBotonConfirmarCompra(): Button
+  }
+  
+  class EndView {
+    - primaryStage: Stage
+    + EndView(primaryStage: Stage)
+    - mostrar(): void
+    + mostrarDerrota(playerScore: int, name: String): void
+    + mostrarVictoria(name: String): void
+    + getBotonReiniciar(): Button
+  }
+  
+  class InicioView {
+      - primaryStage : Stage
+      - nombreField : TextField
+
+      + InicioView(primaryStage: Stage)
+      + mostrar(): void
+      + getIniciarJuegoButton(): Button
+      + getNombreIngresado(): String
+  }
+  
+  class CardsView {
+    - primaryStage : Stage
+    - layout : GridPane
+    - roundIndex : int
+    - playerCardsContainer : HBox
+    - playerJokerContainer : HBox
+    - playerTarotContainer : HBox
+    - roundContainer : HBox
+    - buttonsContainer : HBox
+
+    + CardsView(primaryStage : Stage, roundIndex : int)
+    - initRound() : void
+    + crearInformacionRonda(targetScore : int, playerScore : int, handsLeft : int, discardsLeft : int) : void
+    + actualizarLabelManoJugada(hand : String) : void
+    + showErrorOnScreen(message : String) : void
+    + setPlayerCards(cards : List<Button>) : void
+    + setPlayerJokers(jokers : List<Label>) : void
+    + setPlayerTarots(tarots : List<Label>) : void
+    + setPlayHandButton(playHandButton : Button) : void
+    + setDiscardHandButton(discardHandButton : Button) : void
+    + mostrar() : void
+  }
+  
+}
+
+package Controlador {
+  class GameController {
+    - stage: Stage
+    - buttonClickSound: AudioClip
+    - parser: Parser
+    - player: Player
+    - deck: Deck_I
+    - rounds: Rounds
+    - stores: List<Store>
+    - roundIndex: int
+    + GameController(primaryStage: Stage)
+    + initGame(playerName: String): void
+    - primeraPantalla(): void
+    + iniciarJuego(): void
+    + iniciarRonda(): void
+    + avanzarRonda(): void
+    + getSuitSymbol(card: Card): String
+    + playSoundOnClick(): void
+    + reiniciarJuego(): void
+    + controllLoose(playerScore: int): void
+    + controllWin(): void
+    - initEndGameController(): EndGameController
+  }
+  
+  class InicioController {
+    - gameController : GameController
+
+    + InicioController(inicioView: InicioView, gameController: GameController)
+    - configurarEventos(): void
+    - iniciarJuego(): void
+    + mostrarPantallaInicio(): void
+  }
+  
+    class TiendaController {
+    - gameController : GameController
+    - selectedTarots : List<TarotApply>
+    - selectedJokers : List<JokerApply>
+    - selectedCards : List<Card>
+
+    + TiendaController(TiendaView, GameController, Store, Player, Deck_I)
+    - configurarVista() : void
+    - crearBotonesCarta() : List<Button>
+    - crearBotonesTarot() : List<Button>
+    - crearBotonesJoker() : List<Button>
+    - manejarSeleccionTarot(Button, TarotApply) : void
+    - manejarSeleccionJoker(Button, JokerApply) : void
+    - manejarSeleccionCarta(Button, Card) : void
+    + mostrarPantallaTienda() : void
+  }
+  
+  class CardsController {
+    - player : Player
+    - round : Round
+    - gameController : GameController
+
+    + CardsController(showCardsView : CardsView, player : Player, round : Round, gameController : GameController)
+    - configurarVista() : void
+    - createLabelJokers() : List<Label>
+    - createLabelTarots() : List<Label>
+    - createLabelCards() : List<Button>
+    - createPlayHandButton() : Button
+    - createDiscardHandButton() : Button
+    - setTarotAction(labelTarot : GenericLabel, tarot : TarotApply) : void
+    - onPlayHandClicked() : void
+    - onDiscardHandClicked() : void
+    - fadeOut(labelJoker : GenericLabel) : void
+    - fadeIn(label : GenericLabel) : void
+    - manejarSeleccionCarta(cardButton : Button, selectedCard : Card) : void
+    - manejarSeleccionTarot(selectedTarot : TarotApply) : void
+    - onCardClicked(card : Card, button : Button) : void
+    - chequearFinRonda() : void
+    + mostrarPantallaRonda() : void
+  }
+  
+  class EndGameController {
+    - gameController: GameController
+    + EndGameController(endView: EndView, gameController: GameController, player: Player)
+    - configurarEventos(): void
+    + mostrarLoose(playerScore: int): void
+    + mostrarWin(): void
+  }
+  
+}
+
+GameController .> CardsController
+GameController ..> EndGameController
+GameController .> TiendaController
+GameController ..> InicioController
+
+GameController .> CardsView
+GameController ...> EndView
+GameController ...> TiendaView
+GameController ...> InicioView
+
+@enduml

@@ -1,0 +1,119 @@
+@startuml
+
+package Vista {
+
+  class TiendaView {
+    - primaryStage : Stage
+    - roundIndex : int
+    - tarotButtonsContainer : HBox
+    - jokerButtonsContainer : HBox
+    - cartaContainer : HBox
+
+    + TiendaView(primaryStage: Stage, roundIndex: int)
+    + mostrar(): void
+    + setTarotButtons(buttons: List<Button>): void
+    + setJokerButtons(buttons: List<Button>): void
+    + setCardButtons(buttons: List<Button>): void
+    + getBotonConfirmarCompra(): Button
+  }
+
+  class BotonBase {
+    + BotonBase(text : String)
+    + aplicarEstilo() : void
+  }
+
+  class ButtonStore {
+    + ButtonStore(text : String)
+    + aplicarEstilo() : void
+  }
+
+}
+
+package Controlador {
+
+  class TiendaController {
+    - gameController : GameController
+    - selectedTarots : List<TarotApply>
+    - selectedJokers : List<JokerApply>
+    - selectedCards : List<Card>
+
+    + TiendaController(TiendaView, GameController, Store, Player, Deck_I)
+    - configurarVista() : void
+    - crearBotonesCarta() : List<Button>
+    - crearBotonesTarot() : List<Button>
+    - crearBotonesJoker() : List<Button>
+    - manejarSeleccionTarot(Button, TarotApply) : void
+    - manejarSeleccionJoker(Button, JokerApply) : void
+    - manejarSeleccionCarta(Button, Card) : void
+    + mostrarPantallaTienda() : void
+  }
+
+}
+
+package Modelo {
+
+  interface Deck_I {
+  + dealCards(numberCards : int) : List<Card>
+  + resetDeck() : void
+  + remainingCards() : int
+  + addCard(card : Card) : void
+  + removeCard(card : Card) : void
+}
+
+  class Store {
+    - List<Card> cards
+
+    + Store(jokerList: List<JokerApply>, tarots: List<TarotApply>, cards: List<Card>)
+    + buyJoker(index: int) : JokerApply
+    + buyTarot(index: int) : TarotApply
+    + buyCard(index: int) : Card
+    + getTarots() : List<TarotApply>
+    + getJokerList() : List<JokerApply>
+    + getCards() : List<Card>
+  }
+
+  class Player {
+    - name : String
+    - jokers : List<JokerApply>
+    - tarots : List<TarotApply>
+    - mainHand : MainHand
+    - playingHand : PlayingHand
+    - nTarots : int
+    - nJokers : int
+    + Player(deck : Deck_I, name : String)
+    + getMainCards() : List<Card>
+    + selectCardToHand(card : Card) : void
+    + playHand(round : Round) : void
+    + acceptMoreCards() : boolean
+    + discardHand(round : Round) : void
+    + discard() : void
+    + getPlayingHand() : PlayingHand
+    + numberOfCards() : int
+    + reciveCards(cards : List<Card>) : void
+    + removeCards() : void
+    + useTarot(selectedTarot : Tarot) : void
+    + addTarot(tarot : Tarot) : void
+    + addJoker(joker : JokerApply) : void
+    + removeJoker(joker : JokerApply) : void
+    + checkUsedCards(card : Card) : boolean
+    + unselectCardToHand(card : Card) : void
+    + getHand() : String
+    + removeTarot(tarot : Tarot) : void
+    + getTarots() : List<Tarot>
+    + getJokers() : List<JokerApply>
+    + getHandSize() : int
+    + getName() : String
+}
+
+
+}
+
+TiendaView "1" --> "1" BotonBase
+TiendaController "1" -> "1" TiendaView
+TiendaController "1" --> "1" Player
+TiendaController "1" ---> "1" Deck_I
+TiendaController "1" -> "1" Store
+TiendaController .> BotonBase
+TiendaController .> ButtonStore
+
+@enduml

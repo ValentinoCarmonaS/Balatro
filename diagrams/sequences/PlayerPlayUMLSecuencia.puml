@@ -1,0 +1,38 @@
+@startuml
+
+actor Testcase
+
+Testcase -> p: playHand(r)
+note right of p : Teniendo en cuenta que r pertenece a List<Round>
+
+p -> mh: removeUsedCards()
+mh -> d: dealCards(5)
+note right of mh : Recordar que en PlayerInit se selecciona 5 cartas de la mano
+d --> mh: List<Card>
+mh -> mh: reciveCards(List<Card>)
+
+p -> ph: play()
+ph -> Hand: incRelevantValues()
+create "s :Score" as s
+Hand -> s: new Score(0, 1, 0)
+
+loop Para cada Card relevante
+  Hand -> Card: applyScore(s)
+end loop
+
+Hand --> ph: s
+ph --> p: s
+
+loop Para cada Joker
+  p -> JokerApply: apply(s)
+end loop
+
+p -> r: addPlayerScore(s)
+r -> s: getTotalPoints()
+s --> r: x : int
+
+p -> ph: discard()
+
+p -> r: reduceHands()
+
+@enduml

@@ -1,0 +1,127 @@
+@startuml
+
+interface Taroteable {
+  + applyTarot(Tarot tarot) : void
+}
+
+interface Jokeable {
+  + equalHand(Hand hand) : bool
+}
+
+interface TarotApply {
+    + apply(score : Score) : void
+    + use() : void
+    + getName() : String
+    + getDescription() : String
+    + getTargetType() : Tarotable
+}
+
+interface JokerApply {
+  + apply(Score score) : void
+  + getNombre() : String
+  + getDescripcion() : String
+}
+
+interface JokerObserver {
+  + removeJoker(JokerApply joker) : void
+}
+
+interface Deck_I {
+  + dealCards(numberCards : int) : List<Card>
+  + resetDeck() : void
+  + remainingCards() : int
+  + addCard(card : Card) : void
+  + removeCard(card : Card) : void
+}
+
+class PlayingHand implements Taroteable, Jokeable {
+    - cards : List<Card>
+    - hand : Hand
+    - handCheck : HandCheck
+    - maxCards : int
+    + play() : Score
+    + addCard(card : Card) : void
+    + acceptMoreCards() : boolean
+    + removeCard(card : Card) : void
+    + applyTarot(tarot : Tarot) : void
+    + equalHand(hand : Hand) : boolean
+    + discard() : void
+    + checkHand(handString : String) : Hand
+    + getHandString() : String
+    + isHandNull() : boolean
+    + getHandSize() : int
+}
+
+class MainHand {
+    - List<Card> cards
+    - List<Card> cardsUsed
+    - int numberedOfCards
+    + MainHand(deck: Deck_I)
+    + reciveCards(cards: List<Card>) : void
+    + removeCards() : void
+    + getCard(card: Card) : Card
+    + removeCard(card: Card) : Card
+    + removeUsedCards() : void
+    + size() : int
+    + getCards() : List<Card>
+    + checkUsedCards(card: Card) : boolean
+}
+
+class Player implements JokerObserver {
+    - name : String
+    - nTarots : int
+    - nJokers : int
+    + Player(deck : Deck_I, name : String)
+    + getMainCards() : List<Card>
+    + selectCardToHand(card : Card) : void
+    + playHand(round : Round) : void
+    + acceptMoreCards() : boolean
+    + discardHand(round : Round) : void
+    + discard() : void
+    + getPlayingHand() : PlayingHand
+    + numberOfCards() : int
+    + reciveCards(cards : List<Card>) : void
+    + removeCards() : void
+    + useTarot(selectedTarot : Tarot) : void
+    + addTarot(tarot : Tarot) : void
+    + addJoker(joker : JokerApply) : void
+    + removeJoker(joker : JokerApply) : void
+    + checkUsedCards(card : Card) : boolean
+    + unselectCardToHand(card : Card) : void
+    + getHand() : String
+    + removeTarot(tarot : Tarot) : void
+    + getTarots() : List<Tarot>
+    + getJokers() : List<JokerApply>
+    + getHandSize() : int
+    + getName() : String
+}
+
+class Round {
+    - hands : int
+    - discardsLeft : int
+    - discardsUsed : int
+    - playerScore : int
+    - targetScore : int
+    + Round(hands : int, discards : int, targetScore : int)
+    + reduceHands() : void
+    + reduceDiscards() : boolean
+    + playerDiscard(player : Player) : void
+    + addPlayerScore(playerScore : Score) : void
+    + verifyEndGame() : boolean
+    + verifyStatePlayer() : boolean
+    + useJoker(joker : DiscardJokerStrategy) : void
+    + getHandsLeft() : int
+    + getDiscardsLeft() : int
+    + getPlayerScore() : int
+    + getTargetScore() : int
+}
+
+Player "1" ---> "1" MainHand
+Player "1" --> "1" PlayingHand
+Player "1" --> "0..nJokers" JokerApply
+Player "1" --> "0..nTarots" TarotApply
+Player .> Round
+
+MainHand "1" -> "1" Deck_I
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+
+package Vista {
+
+  class LabelBase {
+    + LabelBase(text : String)
+    - aplicarEstilo() : void
+  }
+
+  class LabelException {
+    + LabelException(texto : String)
+  }
+
+    class LabelEnd {
+    + LabelEnd(texto : String)
+  }
+
+  class GenericLabel {
+      - name: String
+      - description: String
+      + GenericLabel(name: String, description: String)
+      + aplicarEstilo(): void
+      + changeName(): void
+      + changeDescription(): void
+  }
+
+  class ButtonCard extends GenericButton {
+      + ButtonCard(text: String)
+      - aplicarEstilo(): void
+  }
+
+    class ButtonStore extends GenericButton {
+    + ButtonStore(text : String)
+    - aplicarEstilo() : void
+  }
+
+  class GenericButton {
+    + GenericButton(text : String)
+    - configurarEfectoHover() : void
+  }
+
+  class BotonBase extends GenericButton {
+    + BotonBase(text : String)
+    - aplicarEstilo() : void
+  }
+
+}
+
+@enduml

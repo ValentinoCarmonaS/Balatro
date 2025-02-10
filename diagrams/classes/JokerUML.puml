@@ -1,0 +1,51 @@
+@startuml
+
+interface JokerApply {
+    + apply(Score score) : void
+    + getNombre() : String
+    + getDescripcion() : String
+}
+
+interface JokerObserver {
+  removeJoker(JokerApply observable) : void
+}
+
+
+interface JokerStrategy {
+  + apply(score : Score) : void
+}
+
+class RandomApplyJoker implements JokerApply {
+    - random : int
+    + RandomApplyJoker(random : int, joker : Joker)
+    + apply(score : Score) : void
+}
+
+class RandomDestroyJoker implements JokerApply {
+    - random : int
+    + RandomDestroyJoker(random : int, joker : Joker, jokerObserver : JokerObserver)
+    + apply(score : Score) : void
+}
+
+class AlwaysApplyJoker implements JokerApply {
+    + AlwaysApplyJoker(joker : Joker)
+    + apply(score : Score) : void
+}
+
+class Joker {
+    - nombre : String
+    - descripcion : String
+    - jokerStrategy : JokerStrategy
+
+    + Joker(nombre : String, descripcion : String, jokerStrategy : JokerStrategy)
+    + apply(score : Score) : void
+}
+
+RandomDestroyJoker "1" --> "1" JokerObserver
+RandomDestroyJoker "1" --> "1" Joker
+RandomApplyJoker "1" --> "1" Joker
+AlwaysApplyJoker "1" --> "1" Joker
+
+Joker "1" --> "1" JokerStrategy
+
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+
+actor Testcase
+
+Testcase -> p : discardHand(r)
+note right of p : Teniendo en cuenta que r pertenece a List<Round>
+
+p -> r : playerDiscard(p)
+
+alt Si el jugador le quedan Descartes
+  r -> p : discard()
+end alt
+
+p -> mh: removeUsedCards()
+mh -> d: dealCards(5)
+note right of mh : Recordar que en PlayerInit se selecciona 5 cartas de la mano
+d --> mh: List<Card>
+mh -> mh: reciveCards(List<Card>)
+
+p -> ph : discard()
+
+@enduml

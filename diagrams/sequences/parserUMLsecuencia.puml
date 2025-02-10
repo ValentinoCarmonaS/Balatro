@@ -1,0 +1,29 @@
+@startuml
+
+actor Testcase
+
+create "parser : Parser" as parser
+Testcase -> parser: new Parser(balatro.json)
+
+Testcase -> parser: parseDeck()
+  loop por cada carta dentro del json
+  parser -> parser: parseCard(card)
+  create "s :Score" as s
+  parser -> s: new Score(point, mult, 0)
+  create "c: Card" as c
+  parser -> c: new Card(s, suit, rank)
+  end loop
+  create "d :Deck" as d
+  parser -> d: new Deck(List<Card>)
+parser --> Testcase: d
+
+Testcase -> parser: parseRounds()
+loop por cada ronda dentro del json
+  create "r :Round" as r
+  parser -> r: new Round(hands, discards, targetScore)
+end loop
+parser --> Testcase: List<Round>
+
+
+
+@enduml

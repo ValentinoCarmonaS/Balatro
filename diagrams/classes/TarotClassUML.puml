@@ -1,0 +1,28 @@
+@startuml
+
+interface TarotApply {
+    + apply(score : Score) : void
+    + use() : void
+    + getName() : String
+    + getDescription() : String
+    + getTargetType() : Tarotable
+}
+
+interface ScoringStrategy {
+  + apply(Score score) : void
+}
+
+class Tarot implements TarotApply{
+    - nombre : String
+    - descripcion : String
+    - scoringStrategies : List<ScoringStrategy>
+    - targetType : Tarotable
+    + Tarot(nombre : String, descripcion : String, strategys : List<ScoringStrategy>, targetType : Tarotable)
+    + apply(score : Score) : void
+    + use() : void
+    + getNombre() : String
+}
+
+Tarot "1" --> "1" ScoringStrategy
+
+@enduml
